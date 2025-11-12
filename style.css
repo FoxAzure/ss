@@ -1,0 +1,242 @@
+/* ==================== Base ==================== */
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #e8f2ff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 🎯 Paleta pastel (conforme Python)
+   - Pendente (padrão)        : Branco
+   - Estou a caminho          : Amarelo pastel
+   - Concluída                : Verde pastel
+   - Pendente Material        : Vermelho pastel
+*/
+:root {
+  --clr-pastel-yellow: #FFF9C4;  /* Estou a caminho */
+  --clr-pastel-green:  #C8E6C9;  /* Concluída (pastel) */
+  --clr-pastel-red:    #FFCDD2;  /* Pendente Material */
+  --clr-card-default:  #FFFFFF;  /* Pendente (padrão) */
+
+  /* Cores do layout */
+  --nav-bg: #0066cc;
+  --nav-fg: #cce5ff;
+  --nav-fg-hover: #ffffff;
+  --card-border: #a3c7ff;
+  --card-line: #66a3ff;
+  --txt-azul-escuro: #004080;
+  --txt-corpo: #333333;
+  --accent: #007bff;
+
+  /* Azul bem claro para a box do card */
+  --card-bg-azul-muito-claro: #eef6ff; /* tom suave */
+}
+
+/* ==================== Navbar ==================== */
+.navbar {
+  width: 100%;
+  background: var(--nav-bg);
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--nav-fg);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.nav-btn:hover { color: var(--nav-fg-hover); }
+.nav-btn.active {
+  color: #fff;
+  border-bottom: 2px solid #fff;
+}
+
+/* ==================== Campo Técnico ==================== */
+#tecnicoBox {
+  width: 100%;
+  max-width: 600px;
+  background: #d6eaff;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+#tecnicoBox label {
+  font-size: 14px;
+  color: var(--txt-azul-escuro);
+  margin-bottom: 4px;
+}
+#tecnicoBox input {
+  padding: 8px;
+  border: 1px solid #99c2ff;
+  border-radius: 5px;
+}
+
+/* ==================== Cards ==================== */
+#container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 600px;
+  padding: 15px;
+}
+
+/* Box do card com azul bem claro */
+.card {
+  background: var(--card-bg-azul-muito-claro);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 18px;                 /* mais respiro geral */
+  position: relative;
+  cursor: pointer;
+
+  /* Para permitir alinhar o status à direita com align-self */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Filete lateral */
+.card:before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--card-line);
+  border-radius: 10px;
+}
+
+/* Cabeçalho: SS e Data
+   - +5px à esquerda e +5px para baixo (pedido)
+   - Mantém alinhamento SS | Data (flex) */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  color: var(--txt-azul-escuro);
+  padding-left: 5px;    /* +5px esquerda */
+  padding-top: 5px;     /* +5px para baixo */
+}
+
+/* Informações do equipamento/descrição
+   - +5px margem à esquerda (pedido) */
+.card-info {
+  color: var(--txt-corpo);
+  font-size: 14px;
+  margin: 6px 0;
+  margin-left: 5px;     /* +5px esquerda */
+}
+
+/* Lista de serviços:
+   - +8px margem esquerda e +10px margem acima (pedido) */
+.card ul {
+  margin: 0;
+  padding-left: 18px;
+  margin-left: 8px;     /* +8px esquerda */
+  margin-top: 10px;     /* +10px abaixo do bloco anterior */
+}
+.card ul li {
+  font-size: 14px;
+  color: var(--txt-azul-escuro);
+}
+
+/* ==================== Status como "badge" arredondado ==================== */
+/* Sem rabicho/ponta; 100% arredondado; à direita garantido */
+.card-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2d3a3a;
+  padding: 7px 12px;             /* conforto visual */
+  border-radius: 999px;          /* pílula 100% arredondada */
+  background: var(--clr-card-default);  /* Pendente (padrão - branco) */
+  border: 1px solid rgba(0,0,0,0.06);
+  margin-top: 12px;              /* separa do conteúdo acima */
+
+  /* move para a direita dentro do .card (que agora é flex) */
+  align-self: flex-end;
+}
+
+/* ======= Mapas de cor por status via data-atributo =======
+   Se .card-status tiver data-status="Estou a caminho", etc.,
+   estas regras aplicam automaticamente as cores.
+*/
+.card-status[data-status="Pendente"] {
+  background: var(--clr-card-default);    /* branco */
+}
+.card-status[data-status="Estou a caminho"] {
+  background: var(--clr-pastel-yellow);   /* amarelo pastel */
+}
+.card-status[data-status="Concluída"],
+.card-status[data-status="Concluida"] {
+  background: var(--clr-pastel-green);    /* verde pastel */
+}
+.card-status[data-status="Pendente Material"] {
+  background: var(--clr-pastel-red);      /* vermelho pastel */
+}
+
+/* Texto levemente mais escuro nas flags coloridas */
+.card-status[data-status] {
+  color: #1f2a2a;
+}
+
+/* ==================== Modal ==================== */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal.hidden { display: none; }
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  width: 80%;
+  max-width: 350px;
+}
+.modal-content h3 {
+  margin-top: 0;
+  color: var(--txt-azul-escuro);
+}
+.action-btn {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.action-btn:hover { background: #005bb5; }
+#fecharModal {
+  margin-top: 10px;
+  border: none;
+  background: #ddd;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}

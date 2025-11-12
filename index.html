@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Solicitações de Serviço</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <button class="nav-btn active" id="btnPendentes">Pendentes</button>
+    <button class="nav-btn" id="btnSolicitar">Solicitar SS</button>
+    <button class="nav-btn" id="btnPedidos">Pedidos</button>
+  </div>
+
+  <!-- Matrícula do Técnico -->
+  <div id="tecnicoBox">
+    <label for="tecnicoInput">Matrícula do Técnico:</label>
+    <input id="tecnicoInput" type="text" placeholder="Informe sua matrícula" />
+  </div>
+
+  <!-- VIEW: Cards (Pendentes/Concluídas) -->
+  <div id="containerView">
+    <div id="container"></div>
+  </div>
+
+  <!-- VIEW: Solicitar SS -->
+  <div id="solicitarView" style="display:none; width:100%; max-width:600px; padding:15px;">
+    <div class="card" style="background:#eef6ff;">
+      <div class="card-header">
+        <span><b>Nova Solicitação</b></span><span></span>
+      </div>
+
+      <div class="card-info" style="margin-top:8px;">
+        <label for="codInput"><b>Código Equipamento:</b></label><br/>
+        <input id="codInput" type="text" placeholder="Somente Números" style="width:100%; padding:8px; border:1px solid #99c2ff; border-radius:6px;">
+      </div>
+
+      <div class="card-info" style="margin-top:8px;">
+        <label for="dataAbertInput"><b>Data Abertura:</b></label><br/>
+        <input id="dataAbertInput" type="date" style="width:100%; padding:8px; border:1px solid #99c2ff; border-radius:6px;">
+      </div>
+
+      <div class="card-info" style="margin-top:8px;">
+        <label for="obsInput"><b>Observação:</b></label><br/>
+        <textarea id="obsInput" rows="3" placeholder=""
+          style="width:100%; padding:8px; border:1px solid #99c2ff; border-radius:6px;"></textarea>
+      </div>
+
+      <div class="card-info" style="margin-top:8px;">
+        <b>Serviços:</b>
+        <div id="servicosSelecionados" style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;"></div>
+        <button id="btnAddServico" class="action-btn" style="width:auto; background:#196B24;">＋ Adicionar serviço</button>
+      </div>
+
+      <div class="card-info" style="margin-top:8px;">
+        <label for="statusSelect"><b>Status:</b></label><br/>
+        <select id="statusSelect" style="width:100%; padding:8px; border:1px solid #99c2ff; border-radius:6px;">
+          <option value="Pendente" selected>Pendente</option>
+          <option value="Estou a caminho">Estou a caminho</option>
+          <option value="Concluída">Concluída</option>
+          <option value="Pendente Material">Pendente Material</option>
+        </select>
+      </div>
+
+      <div id="encGroup" class="card-info" style="margin-top:8px; display:none;">
+        <label for="dataEncInput"><b>Data Encerramento:</b></label><br/>
+        <input id="dataEncInput" type="date" style="width:100%; padding:8px; border:1px solid #99c2ff; border-radius:6px;">
+        <div style="font-size:12px; color:#004080; margin-top:4px;">* Deve ser igual ou maior que a Data de Abertura.</div>
+      </div>
+
+      <div class="card-info" style="margin-top:14px; display:flex; gap:10px;">
+        <button id="btnSalvarPedido" class="action-btn" style="background:#002F8E;">Salvar Pedido</button>
+        <button id="btnLimparPedido" class="action-btn" style="background:#E97132;">Limpar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: Pedidos (por matrícula, SITUACAO <> 'Ok') -->
+  <div id="pedidosView" style="display:none; width:100%; max-width:800px; padding:15px;">
+    <div id="pedidosContainer" style="display:flex; flex-direction:column; gap:12px;"></div>
+  </div>
+
+  <!-- Modal: Atualização de Status (já existente para os cards principais) -->
+  <div id="modal" class="modal hidden" aria-hidden="true" role="dialog">
+    <div class="modal-content">
+      <h3 id="modalTitulo">SS</h3>
+      <button class="action-btn" data-status="Pendente">Pendente</button>
+      <button class="action-btn" data-status="Estou a caminho">Estou a caminho</button>
+      <button class="action-btn" data-status="Concluída">Concluída</button>
+      <button class="action-btn" data-status="Pendente Material">Pendente Material</button>
+      <button id="fecharModal">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Modal: Seleção de Serviços -->
+  <div id="modalServicos" class="modal hidden" aria-hidden="true" role="dialog">
+    <div class="modal-content" style="max-width:420px; width:90%;">
+      <h3>Selecionar Serviço</h3>
+      <input id="buscaServico" type="text" placeholder="Procurar Serviço" style="width:100%; padding:8px; border:1px solid #99c2ff; border-radius:6px;">
+      <div id="listaServicos" style="max-height:260px; overflow:auto; margin-top:10px; text-align:left;"></div>
+
+      <div style="margin-top:10px; text-align:left;">
+        <b>Outros</b>
+        <input id="outroServico" type="text" placeholder="Descreva o serviço"
+               style="width:100%; padding:8px; border:1px solid #99c2ff; border-radius:6px; margin-top:6px;">
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button id="btnSalvarServicos" class="action-btn" style="background:#196B24;">Salvar</button>
+        <button id="btnCancelarServicos" class="action-btn" style="background:#aaa;">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
